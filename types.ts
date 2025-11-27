@@ -13,12 +13,14 @@ export interface Timer {
   isCompleted: boolean;
   createdAt: number;
   pomodoroType?: PomodoroType;
+  note?: string; // Optional reminder/note
 }
 
 export interface Preset {
   label: string;
   duration: number; // seconds
   type: TimerType;
+  note?: string; // Optional note/description
 }
 
 export const PRESETS: Preset[] = [

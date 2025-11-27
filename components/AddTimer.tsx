@@ -3,7 +3,7 @@ import { PRESETS, TimerType, Preset } from '../types';
 import { PlusIcon, TrashIcon, SettingsIcon } from './Icons';
 
 interface AddTimerProps {
-  onAdd: (type: TimerType, duration: number, label: string) => void;
+  onAdd: (type: TimerType, duration: number, label: string, note?: string) => void;
   customPresets: Preset[];
   onSavePreset: (preset: Preset) => void;
   onDeletePreset: (label: string) => void;
@@ -18,11 +18,12 @@ const AddTimer: React.FC<AddTimerProps> = ({ onAdd, customPresets, onSavePreset,
   const [minutes, setMinutes] = useState(5);
   const [seconds, setSeconds] = useState(0);
   const [label, setLabel] = useState('Custom Timer');
+  const [note, setNote] = useState('');
 
   const handleCustomAdd = () => {
     const duration = hours * 3600 + minutes * 60 + seconds;
     if (duration > 0) {
-        onAdd('TIMER', duration, label);
+        onAdd('TIMER', duration, label, note || undefined);
         setIsOpen(false);
         resetForm();
     }
@@ -34,7 +35,8 @@ const AddTimer: React.FC<AddTimerProps> = ({ onAdd, customPresets, onSavePreset,
           onSavePreset({
               label: label,
               duration: duration,
-              type: 'TIMER'
+              type: 'TIMER',
+              note: note || undefined
           });
           setIsCustomMode(false); // Return to preset list to see the new preset
       }
@@ -45,6 +47,7 @@ const AddTimer: React.FC<AddTimerProps> = ({ onAdd, customPresets, onSavePreset,
       setMinutes(5);
       setSeconds(0);
       setLabel('Custom Timer');
+      setNote('');
       setIsCustomMode(false);
   };
 
@@ -82,7 +85,7 @@ const AddTimer: React.FC<AddTimerProps> = ({ onAdd, customPresets, onSavePreset,
                             {allPresets.map((preset, idx) => (
                                 <div key={`${preset.label}-${idx}`} className="relative group">
                                     <button 
-                                        onClick={() => { onAdd(preset.type, preset.duration, preset.label); setIsOpen(false); }}
+                                        onClick={() => { onAdd(preset.type, preset.duration, preset.label, preset.note); setIsOpen(false); }}
                                         className="px-3 py-2 md:px-4 md:py-2 rounded-full bg-neutral-900 border border-neutral-800 text-neutral-300 text-xs font-medium hover:bg-white hover:text-black hover:border-white transition-all"
                                     >
                                         {preset.label}
@@ -122,6 +125,16 @@ const AddTimer: React.FC<AddTimerProps> = ({ onAdd, customPresets, onSavePreset,
                                 onChange={(e) => setLabel(e.target.value)}
                                 className="bg-[#111] border border-neutral-800 rounded-lg px-4 py-2 text-white text-sm focus:outline-none focus:border-neutral-600 transition-colors"
                                 placeholder="Timer Name"
+                            />
+                        </div>
+
+                        <div className="flex flex-col gap-2">
+                            <label className="text-xs text-neutral-500 ml-1">Note/Reminder (Optional)</label>
+                            <textarea 
+                                value={note}
+                                onChange={(e) => setNote(e.target.value)}
+                                className="bg-[#111] border border-neutral-800 rounded-lg px-4 py-2 text-white text-sm focus:outline-none focus:border-neutral-600 transition-colors resize-none h-20"
+                                placeholder="e.g., Exam starts at 10 AM, Study for Biology"
                             />
                         </div>
 

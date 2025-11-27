@@ -244,14 +244,23 @@ const TimerCard: React.FC<TimerCardProps> = ({ timer, onToggle, onReset, onDelet
 
         {/* Tab Switcher - Hidden in fullscreen */}
         {!isFullscreen && (
-            <div className="flex p-1 bg-[#151515] rounded-full border border-neutral-800 mb-6 md:mb-8 z-20 relative scale-90 md:scale-100">
-                <button 
-                    onClick={() => handleTabChange('TIMER')}
-                    className={`flex items-center gap-2 px-3 md:px-4 py-2 rounded-full text-xs font-medium transition-all ${timer.type === 'TIMER' ? 'bg-white text-black shadow-lg' : 'text-neutral-500 hover:text-neutral-300'}`}
-                >
-                    <ClockIcon className="w-3 h-3" />
-                    <span className="hidden sm:inline">Timer</span>
-                </button>
+            <div className="w-full flex flex-col gap-4">
+                {/* Note Display */}
+                {timer.note && (
+                    <div className="px-4 py-3 rounded-lg bg-neutral-900/50 border border-neutral-800 text-neutral-400 text-xs md:text-sm text-center">
+                        <div className="text-neutral-600 text-[10px] md:text-xs uppercase tracking-wider mb-1">Reminder</div>
+                        <div className="text-neutral-300">{timer.note}</div>
+                    </div>
+                )}
+                
+                <div className="flex p-1 bg-[#151515] rounded-full border border-neutral-800 z-20 relative scale-90 md:scale-100 mx-auto">
+                    <button 
+                        onClick={() => handleTabChange('TIMER')}
+                        className={`flex items-center gap-2 px-3 md:px-4 py-2 rounded-full text-xs font-medium transition-all ${timer.type === 'TIMER' ? 'bg-white text-black shadow-lg' : 'text-neutral-500 hover:text-neutral-300'}`}
+                    >
+                        <ClockIcon className="w-3 h-3" />
+                        <span className="hidden sm:inline">Timer</span>
+                    </button>
                 <button 
                     onClick={() => handleTabChange('STOPWATCH')}
                     className={`flex items-center gap-2 px-3 md:px-4 py-2 rounded-full text-xs font-medium transition-all ${timer.type === 'STOPWATCH' ? 'bg-white text-black shadow-lg' : 'text-neutral-500 hover:text-neutral-300'}`}
@@ -266,6 +275,7 @@ const TimerCard: React.FC<TimerCardProps> = ({ timer, onToggle, onReset, onDelet
                     <CoffeeIcon className="w-3 h-3" />
                     <span className="hidden sm:inline">Pomodoro</span>
                 </button>
+                </div>
             </div>
         )}
 

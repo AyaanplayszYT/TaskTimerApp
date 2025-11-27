@@ -16,6 +16,9 @@ function App() {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isClockFullscreen, setIsClockFullscreen] = useState(false);
   const [customPresets, setCustomPresets] = useState<Preset[]>([]);
+  const [clockReminder, setClockReminder] = useState<string>("");
+  const [showReminderInput, setShowReminderInput] = useState(false);
+  const [reminderText, setReminderText] = useState<string>("");
 
   // --- Clock ---
   useEffect(() => {
@@ -111,6 +114,12 @@ function App() {
             setCustomPresets(JSON.parse(savedPresets));
         } catch (e) { console.error(e); }
     }
+
+    // Load clock reminder
+    const savedReminder = localStorage.getItem('clock_reminder');
+    if (savedReminder) {
+      setClockReminder(savedReminder);
+    }
   }, []);
 
   const initializeDefaultTimer = () => {
@@ -163,7 +172,7 @@ function App() {
 
 
   // --- Actions ---
-  const addTimer = (type: TimerType, duration: number, label: string) => {
+  const addTimer = (type: TimerType, duration: number, label: string, note?: string) => {
     const newTimer: Timer = {
       id: crypto.randomUUID(),
       type: type,
@@ -174,7 +183,8 @@ function App() {
       isRunning: false,
       isCompleted: false,
       createdAt: Date.now(),
-      pomodoroType: type === 'POMODORO' ? 'FOCUS' : undefined
+      pomodoroType: type === 'POMODORO' ? 'FOCUS' : undefined,
+      note: note
     };
     setTimers(prev => [...prev, newTimer]);
   };
@@ -277,7 +287,7 @@ function App() {
                 }`}
             >
               {isClockFullscreen ? (
-                <div className="flex flex-col items-center justify-center gap-8">
+                <div className="flex flex-col items-center justify-center gap-8 w-full h-full relative">
                   <div className="text-neutral-400 font-sans text-3xl md:text-5xl font-light tracking-wide mb-4">
                     {greeting}
                   </div>
@@ -290,16 +300,88 @@ function App() {
                   <div className="mt-8 flex justify-center">
                     <Weather />
                   </div>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleClockFullscreen();
-                    }}
-                    className="absolute bottom-8 right-8 p-3 rounded-full bg-[#111]/80 backdrop-blur-md border border-neutral-800 text-neutral-400 hover:text-white hover:border-neutral-600 transition-colors"
-                    title="Exit Clock View"
-                  >
-                    <MinimizeIcon className="w-6 h-6" />
-                  </button>
+
+                  {/* Reminder Display */}
+                  {clockReminder && (
+                    <div className="mt-12 px-8 py-6 rounded-2xl bg-neutral-900/80 border border-neutral-700 backdrop-blur-md max-w-2xl mx-auto">
+                      <div className="text-neutral-500 text-sm font-medium mb-2 uppercase tracking-wider">Reminder</div>
+                      <div className="text-white text-2xl md:text-3xl font-light text-center leading-relaxed">
+                        {clockReminder}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Bottom Controls */}
+                  <div className="absolute bottom-8 right-8 flex items-center gap-3" onClick={(e) => e.stopPropagation()}>
+                    {!showReminderInput ? (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setShowReminderInput(true);
+                        }}
+                        className="p-3 rounded-full bg-[#111]/80 backdrop-blur-md border border-neutral-800 text-neutral-400 hover:text-white hover:border-neutral-600 transition-colors flex items-center justify-center w-12 h-12"
+                        title="Add Reminder"
+                      >
+                        <span className="text-2xl leading-none">+</span>
+                      </button>
+                    ) : (
+                      <div className="flex gap-2 items-center">
+                        <input
+                          type="text"
+                          value={reminderText}
+                          onChange={(e) => setReminderText(e.target.value)}
+                          placeholder="Enter reminder..."
+                          className="px-4 py-2 rounded-full bg-[#111]/80 backdrop-blur-md border border-neutral-800 text-white placeholder-neutral-600 focus:outline-none focus:border-neutral-600 text-sm"
+                          autoFocus
+                          onClick={(e) => e.stopPropagation()}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              if (reminderText.trim()) {
+                                setClockReminder(reminderText);
+                                localStorage.setItem('clock_reminder', reminderText);
+                              }
+                              setReminderText('');
+                              setShowReminderInput(false);
+                            }
+                          }}
+                        />
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (reminderText.trim()) {
+                              setClockReminder(reminderText);
+                              localStorage.setItem('clock_reminder', reminderText);
+                            }
+                            setReminderText('');
+                            setShowReminderInput(false);
+                          }}
+                          className="px-4 py-2 rounded-full bg-white text-black hover:bg-neutral-200 transition-colors font-medium text-sm"
+                        >
+                          Save
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setShowReminderInput(false);
+                            setReminderText('');
+                          }}
+                          className="p-1.5 rounded-full bg-neutral-900/80 border border-neutral-700 text-neutral-400 hover:text-white transition-colors text-sm"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    )}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleClockFullscreen();
+                      }}
+                      className="p-3 rounded-full bg-[#111]/80 backdrop-blur-md border border-neutral-800 text-neutral-400 hover:text-white hover:border-neutral-600 transition-colors"
+                      title="Exit Clock View"
+                    >
+                      <MinimizeIcon className="w-6 h-6" />
+                    </button>
+                  </div>
                 </div>
               ) : (
                 <>
