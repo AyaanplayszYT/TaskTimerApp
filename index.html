@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SimpleTimerAppt</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              midnight: {
+                950: '#050505',
+                900: '#0a0a0a',
+                850: '#121212',
+                800: '#171717',
+                700: '#262626',
+                600: '#404040',
+                500: '#525252',
+                100: '#f5f5f5',
+              }
+            },
+            animation: {
+              'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+              'spin-slow': 'spin 12s linear infinite',
+              'expand': 'expand 0.3s ease-out forwards',
+              'fade-in': 'fadeIn 0.5s ease-out forwards',
+              'shake': 'shake 0.5s cubic-bezier(.36,.07,.19,.97) both',
+            },
+            keyframes: {
+              expand: {
+                '0%': { transform: 'scale(0.95)', opacity: '0' },
+                '100%': { transform: 'scale(1)', opacity: '1' },
+              },
+              fadeIn: {
+                '0%': { opacity: '0', transform: 'translateY(10px)' },
+                '100%': { opacity: '1', transform: 'translateY(0)' },
+              },
+              shake: {
+                '0%, 100%': { transform: 'translateX(0)' },
+                '10%, 30%, 50%, 70%, 90%': { transform: 'translateX(-4px)' },
+                '20%, 40%, 60%, 80%': { transform: 'translateX(4px)' },
+              }
+            },
+            fontFamily: {
+              mono: ['JetBrains Mono', 'monospace'],
+              sans: ['Inter', 'sans-serif'],
+            },
+          }
+        }
+      }
+    </script>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap');
+      
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: #050505;
+      }
+      
+      .font-digital {
+        font-family: 'JetBrains Mono', monospace;
+        font-feature-settings: "zero" 1;
+      }
+      
+      /* Hide scrollbar for clean look */
+      ::-webkit-scrollbar {
+        width: 0px;
+        background: transparent;
+      }
+    </style>
+    <link rel="stylesheet" href="/index.css">
+  </head>
+  <body class="bg-[#050505] text-white min-h-screen selection:bg-white selection:text-black overflow-x-hidden">
+    <div id="root" class="w-full min-h-screen flex flex-col items-center"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>
