@@ -4,12 +4,12 @@ A modern, space-themed multi-timer application featuring stopwatch, pomodoro, an
 
 ## Features
 
-- ⏱️ Multiple timer modes: Timer, Stopwatch, and Pomodoro
-- 🎨 Beautiful space-themed UI with dynamic island display
-- 💾 Persistent state - your timers survive page refreshes
-- 🔔 Sound alerts when timers complete
-- 📱 Fullscreen support
-- ⚡ Custom presets for quick timer setup
+- Multiple timer modes: Timer, Stopwatch, and Pomodoro
+- Beautiful space-themed UI with dynamic island display
+- Persistent state - your timers survive page refreshes
+- Sound alerts when timers complete
+- Fullscreen support
+- Custom presets for quick timer setup
 
 ## Run Locally
 

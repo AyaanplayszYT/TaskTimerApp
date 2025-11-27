@@ -93,7 +93,11 @@ const TimerCard: React.FC<TimerCardProps> = ({ timer, onToggle, onReset, onDelet
 
   useEffect(() => {
     const handleChange = () => {
-        setIsFullscreen(document.fullscreenElement === cardRef.current);
+        if (!document.fullscreenElement) {
+            setIsFullscreen(false);
+        } else {
+            setIsFullscreen(document.fullscreenElement === cardRef.current);
+        }
     };
     document.addEventListener('fullscreenchange', handleChange);
     return () => document.removeEventListener('fullscreenchange', handleChange);
