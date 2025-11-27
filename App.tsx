@@ -307,11 +307,22 @@ function App() {
 
                   {/* Reminder Display */}
                   {clockReminder && (
-                    <div className="mt-12 px-8 py-6 rounded-2xl bg-neutral-900/80 border border-neutral-700 backdrop-blur-md max-w-2xl mx-auto">
+                    <div className="mt-12 px-8 py-6 rounded-2xl bg-neutral-900/80 border border-neutral-700 backdrop-blur-md max-w-2xl mx-auto relative group">
                       <div className="text-neutral-500 text-sm font-medium mb-2 uppercase tracking-wider">Reminder</div>
                       <div className="text-white text-2xl md:text-3xl font-light text-center leading-relaxed">
                         {clockReminder}
                       </div>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setClockReminder('');
+                          localStorage.removeItem('clock_reminder');
+                        }}
+                        className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity p-2 text-neutral-600 hover:text-red-500 text-lg"
+                        title="Remove Reminder"
+                      >
+                        ✕
+                      </button>
                     </div>
                   )}
 
