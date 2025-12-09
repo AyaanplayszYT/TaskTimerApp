@@ -18,6 +18,8 @@ const TimerCard: React.FC<TimerCardProps> = ({ timer, onToggle, onReset, onDelet
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [currentTime, setCurrentTime] = useState<string>('');
   const [currentDate, setCurrentDate] = useState<string>('');
+  const [showNoteInput, setShowNoteInput] = useState(false);
+  const [noteText, setNoteText] = useState('');
   const editInputRef = useRef<HTMLInputElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
 
@@ -221,7 +223,7 @@ const TimerCard: React.FC<TimerCardProps> = ({ timer, onToggle, onReset, onDelet
         className={`bg-[#0A0A0A] border flex flex-col items-center shadow-2xl relative overflow-hidden transition-all
             ${timer.isCompleted ? 'animate-shake border-red-900 shadow-[0_0_50px_rgba(220,38,38,0.4)]' : 'border-neutral-800'}
             ${isFullscreen 
-                ? 'fixed inset-0 z-50 w-full h-full justify-center border-none rounded-none' 
+                ? 'fixed inset-0 z-50 w-full h-full justify-center border-none rounded-none p-0 pt-28 pb-24' 
                 : 'rounded-[32px] p-6 md:p-8'
             }`}
       >
@@ -231,25 +233,116 @@ const TimerCard: React.FC<TimerCardProps> = ({ timer, onToggle, onReset, onDelet
 
         {/* Fullscreen Current Time */}
         {isFullscreen && (
-            <div className="absolute top-4 right-4 md:top-8 md:right-8 flex flex-col items-end z-50 animate-fade-in">
-                <div className="text-neutral-500 font-mono text-lg md:text-xl font-medium tracking-wider">
+            <div className="absolute top-12 right-4 md:top-16 md:right-8 flex flex-col items-end z-50 animate-fade-in">
+                <div className="text-neutral-400 font-mono text-3xl md:text-5xl font-medium tracking-wider">
                     {currentTime}
                 </div>
-                <div className="text-neutral-600 font-sans text-xs md:text-sm font-medium mt-1">
+                <div className="text-neutral-600 font-sans text-base md:text-xl font-medium mt-1">
                     {currentDate}
                 </div>
+                
+                {/* Note Below Clock */}
+                {timer.note && (
+                    <div className="mt-6 px-6 py-4 rounded-lg bg-neutral-900/80 border border-neutral-700 max-w-sm text-right group relative">
+                        <div className="text-neutral-600 text-xs md:text-sm uppercase tracking-wider mb-2">Note</div>
+                        <div className="text-neutral-300 text-sm md:text-lg leading-relaxed">{timer.note}</div>
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onUpdate(timer.id, { note: undefined });
+                            }}
+                            className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity p-1 text-neutral-600 hover:text-red-500 text-xs"
+                            title="Remove Note"
+                        >
+                            ✕
+                        </button>
+                    </div>
+                )}
             </div>
         )}
 
         {/* Maximize/Minimize Toggle - Bottom Right */}
-        <button 
-            onClick={toggleFullscreen}
-            className={`absolute bottom-4 right-4 md:bottom-6 md:right-6 p-2 rounded-full text-neutral-600 hover:text-white hover:bg-neutral-900 transition-all z-50
-                ${!isFullscreen ? 'opacity-100 md:opacity-0 md:group-hover:opacity-100' : 'opacity-100'}`}
-            title={isFullscreen ? "Exit Focus Mode" : "Enter Focus Mode"}
-        >
-            {isFullscreen ? <MinimizeIcon className="w-5 h-5" /> : <MaximizeIcon className="w-5 h-5" />}
-        </button>
+        {!isFullscreen && (
+            <button 
+                onClick={toggleFullscreen}
+                className={`absolute bottom-4 right-4 md:bottom-6 md:right-6 p-2 rounded-full text-neutral-600 hover:text-white hover:bg-neutral-900 transition-all z-50 md:opacity-0 md:group-hover:opacity-100`}
+                title="Enter Focus Mode"
+            >
+                <MaximizeIcon className="w-5 h-5" />
+            </button>
+        )}
+
+        {/* Fullscreen Controls - Note & Exit */}
+        {isFullscreen && (
+            <div className="absolute bottom-8 right-8 flex items-center gap-3 z-50" onClick={(e) => e.stopPropagation()}>
+                {!showNoteInput ? (
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setShowNoteInput(true);
+                        }}
+                        className="p-3 rounded-full bg-[#111]/80 backdrop-blur-md border border-neutral-800 text-neutral-400 hover:text-white hover:border-neutral-600 transition-colors flex items-center justify-center w-12 h-12"
+                        title="Add Note"
+                    >
+                        <span className="text-2xl leading-none">+</span>
+                    </button>
+                ) : (
+                    <div className="flex gap-2 items-center">
+                        <input
+                            type="text"
+                            value={noteText}
+                            onChange={(e) => setNoteText(e.target.value)}
+                            placeholder="Add a note..."
+                            className="px-4 py-2 rounded-full bg-[#111]/80 backdrop-blur-md border border-neutral-800 text-white placeholder-neutral-600 focus:outline-none focus:border-neutral-600 text-sm"
+                            autoFocus
+                            onClick={(e) => e.stopPropagation()}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    if (noteText.trim()) {
+                                        onUpdate(timer.id, { note: noteText });
+                                    }
+                                    setNoteText('');
+                                    setShowNoteInput(false);
+                                }
+                            }}
+                        />
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                if (noteText.trim()) {
+                                    onUpdate(timer.id, { note: noteText });
+                                }
+                                setNoteText('');
+                                setShowNoteInput(false);
+                            }}
+                            className="px-4 py-2 rounded-full bg-white text-black hover:bg-neutral-200 transition-colors font-medium text-sm"
+                        >
+                            Save
+                        </button>
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setShowNoteInput(false);
+                                setNoteText('');
+                            }}
+                            className="p-1.5 rounded-full bg-neutral-900/80 border border-neutral-700 text-neutral-400 hover:text-white transition-colors text-sm"
+                        >
+                            ✕
+                        </button>
+                    </div>
+                )}
+                <button
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        toggleFullscreen();
+                    }}
+                    className="p-3 rounded-full bg-[#111]/80 backdrop-blur-md border border-neutral-800 text-neutral-400 hover:text-white hover:border-neutral-600 transition-colors flex items-center justify-center w-12 h-12"
+                    title="Exit Focus Mode"
+                >
+                    <MinimizeIcon className="w-6 h-6" />
+                </button>
+            </div>
+        )}
 
         {/* Tab Switcher - Hidden in fullscreen */}
         {!isFullscreen && (
@@ -323,7 +416,7 @@ const TimerCard: React.FC<TimerCardProps> = ({ timer, onToggle, onReset, onDelet
 
         {/* Timer Visualization */}
         <div className={`relative flex items-center justify-center w-full transition-all duration-500 
-            ${isFullscreen ? 'scale-100 md:scale-125 mb-16' : 'scale-[0.85] md:scale-100 mb-8 md:mb-12 origin-center'}
+            ${isFullscreen ? 'scale-125 md:scale-150 mb-8' : 'scale-[0.85] md:scale-100 mb-8 md:mb-12 origin-center'}
         `}>
             {/* The Circle */}
             <div className="relative z-10">
@@ -367,6 +460,8 @@ const TimerCard: React.FC<TimerCardProps> = ({ timer, onToggle, onReset, onDelet
                         Ends at {endTime}
                     </div>
                 )}
+
+
             </div>
             
             {/* Background dashed circle for aesthetics */}
@@ -376,7 +471,7 @@ const TimerCard: React.FC<TimerCardProps> = ({ timer, onToggle, onReset, onDelet
         </div>
 
         {/* Controls */}
-        <div className="flex items-center justify-center gap-4 md:gap-6 w-full mb-4 md:mb-8 relative z-20">
+        <div className={`flex items-center justify-center gap-4 md:gap-6 w-full relative z-20 ${isFullscreen ? 'mt-32 md:mt-40' : 'mb-4 md:mb-8'}`}>
             {/* Reset Button */}
             <button 
                 onClick={() => onReset(timer.id)}
