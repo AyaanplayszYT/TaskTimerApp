@@ -460,7 +460,7 @@ const TimerCard: React.FC<TimerCardProps> = ({ timer, onToggle, onReset, onDelet
 
         {/* Timer Visualization */}
         <div className={`relative flex items-center justify-center w-full transition-all duration-500 
-            ${isFullscreen ? 'scale-125 md:scale-150 mb-8' : 'scale-[0.85] md:scale-100 mb-8 md:mb-12 origin-center'}
+            ${isFullscreen ? 'scale-125 md:scale-150 mb-8' : 'scale-[0.85] md:scale-100 mt-8 md:mt-12 mb-12 md:mb-16 origin-center'}
         `}>
             {/* The Circle */}
             <div className="relative z-10">

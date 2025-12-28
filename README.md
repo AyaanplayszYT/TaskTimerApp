@@ -11,8 +11,6 @@
 
 **A sleek, modern multi-timer application with advanced features for productivity enthusiasts.**
 
-[✨ Features](#-features) • [🚀 Quick Start](#-quick-start) • [📖 Usage](#-usage) • [🎨 Stack](#-tech-stack) • [🤝 Contributing](#-contributing)
-
 ---
 
 </div>
@@ -126,39 +124,6 @@ npm run preview
 
 ---
 
-## 📁 Project Structure
-
-```
-TaskTimerApp/
-├── components/
-│   ├── AddTimer.tsx          # Timer creation modal
-│   ├── CircularProgress.tsx  # Circular progress ring
-│   ├── DynamicIsland.tsx     # macOS-style status bar
-│   ├── Icons.tsx             # SVG icon components
-│   ├── StackTimers.tsx       # Stack timer management
-│   ├── TimerCard.tsx         # Individual timer display
-│   └── Weather.tsx           # Weather widget
-├── utils/
-│   └── sound.ts              # Audio management
-├── types.ts                  # TypeScript interfaces
-├── App.tsx                   # Main application
-└── index.tsx                 # Entry point
-```
-
----
-
-## 🎯 Roadmap
-
-- [ ] Cloud sync across devices
-- [ ] Timer templates library
-- [ ] Export timer history
-- [ ] Dark/light theme toggle
-- [ ] Mobile app (React Native)
-- [ ] Timer analytics and insights
-- [ ] Collaborative timers (multiplayer)
-
----
-
 ## 🤝 Contributing
 
 Contributions are welcome! Here's how:
@@ -179,16 +144,18 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 👨‍💻 Authors
 
+<div align="center">
+
 **Made with ❤️ by:**
 - [Mistiz911](https://github.com/Mistiz911)
 - [Aspitasko](https://github.com/Aspitasko)
+
+</div>
 
 ---
 
 <div align="center">
 
 ### ⭐ Star this repo if you find it useful!
-
-**[Report Bug](https://github.com/AyaanplayszYT/TaskTimerApp/issues)** • **[Request Feature](https://github.com/AyaanplayszYT/TaskTimerApp/issues)**
 
 </div>

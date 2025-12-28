@@ -85,7 +85,7 @@ const AddTimer: React.FC<AddTimerProps> = ({ onAdd, customPresets, onSavePreset,
                 {!isCustomMode ? (
                     <>
                         <div className="text-center mb-6 text-neutral-400 text-sm font-medium">Select a Preset</div>
-                        <div className="flex flex-wrap items-center justify-center gap-2 md:gap-3 mb-6">
+                        <div className="flex flex-wrap items-center justify-center gap-3 md:gap-4 mb-6">
                             {/* Presets */}
                             {allPresets.map((preset, idx) => (
                                 <div key={`${preset.label}-${idx}`} className="relative group">
